@@ -3,7 +3,7 @@ import { useReactToPrint } from 'react-to-print';
 import { Printer, Plus, Trash2, Users } from 'lucide-react';
 import { AddressForm } from './components/AddressForm';
 import { ShippingLabel } from './components/ShippingLabel';
-import { Footer } from './components/footer';
+import { Footer } from './components/Footer';
 import type { AddressData, AddressType } from './types';
 import clsx from 'clsx'; // Utility para classes condicionais
 
