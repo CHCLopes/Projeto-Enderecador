@@ -3,9 +3,13 @@
 @tailwind utilities;
 
 @media print {
+  @page {
+    size: auto;
+    margin: 0mm;
+  }
   body {
-    
     -webkit-print-color-adjust: exact;
+    background-color: white;
     print-color-adjust: exact;
   }
 }
