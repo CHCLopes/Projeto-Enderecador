@@ -227,7 +227,7 @@ function App() {
                 </div>
 
                 {/* BOTÃO IMPRIMIR (Visível APENAS NO MOBILE - Fim da Tela) */}
-                <div className="lg:hidden mt-8 mb-4">
+                <div className="lg:hidden mt-8 mb-4 print:hidden">
                     <button
                         onClick={() => handlePrint && handlePrint()}
                         disabled={!hasLabels}
