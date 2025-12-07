@@ -13,18 +13,18 @@ ___
 
 | Desktop, Tablet e Mobile |
 |---------------------------|
-| ![Home](./public/printcompleto.png) |
+| ![Home](./src/assets/printcompleto.png) |
 ### 💻 Interface Desktop
 
 | Desktop | Remetente e Visualização da Impressão | Destinatário e Footer |
 |---------------------------|-----------------------------------|-------------------|
-| ![Home](./public/printDesktop.png) | ![Remetente e Visualização da Impressão](./public/printDesktop1.png) | ![Destinatário e Footer](./public/printDesktop2.png) |
+| ![Desktop](./src/assets/printDesktop.png) | ![Remetente e Visualização da Impressão](./src/assets/printDesktop1.png) | ![Destinatário e Footer](./src/assets/printDesktop2.png) |
 
 ### 📱 Interface Mobile
 
 | Remetente Mobile  | Destinatário Mobile | Preview de Impressão e Footer Mobile|
 |--------------------------------|------------------------|----------------------|
-| ![Remetente Mobile](./public/printMobile1.png) | ![Destinatário Mobile](./public/printMobile2.png) | ![Preview de Impressão e Footer Mobile](./public/printMobile3.png) |
+| ![Remetente Mobile](./src/assets/printMobile1.png) | ![Destinatário Mobile](./src/assets/printMobile2.png) | ![Preview de Impressão e Footer Mobile](./src/assets/printMobile3.png) |
 
 ## ✨ Sobre o Projeto
 

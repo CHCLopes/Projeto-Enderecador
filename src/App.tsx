@@ -85,7 +85,7 @@ function App() {
             {/* ... (conteúdo do header mantido igual) ... */}
              <div className="flex items-center gap-2">
                 <div className="p-2 rounded text-white shadow-sm">
-                  <img src="../public/LogoECT.svg" alt="Logo ECT" width={140} />
+                  <img src="./src/assets/LogoECT.svg" alt="Logo ECT" width={140} />
                 </div>
                 <div>
                   <h1 className="text-2xl font-bold text-[#07426B]">Endereçador</h1>
