@@ -1,6 +1,6 @@
 # <a href="https://reactjs.org/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original-wordmark.svg" alt="react" width="40" height="40"/></a><a href="https://tailwindcss.com/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" alt="react" width="40" height="40"/></a><a href="https://www.typescriptlang.org/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" alt="typescript" width="40" height="40"/></a> Endereçador
 ___
-# <img src="./correios-label-generator/public/logoECT-P-Tr.png" alt="Icone Pacote" width="40"> Endereçador de Encomendas e Correspondência
+# <img src="./logoECT-P-Tr.png" alt="Icone Pacote" width="40"> Endereçador de Encomendas e Correspondência
 
 ![Status](https://img.shields.io/badge/Status-Concluído-green)
 ![React](https://img.shields.io/badge/React-18-blue)
