@@ -170,7 +170,8 @@ function App() {
                     </div>
                 ) : (
                     <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200 text-yellow-800 text-sm mb-6 text-center">
-                        Preencha o destinatário e clique em "Adicionar" para criar uma etiqueta.
+                        Preencha o remetente e o destinatário, logo após, clique em "Adicionar" para criar uma etiqueta. <br />
+                        Para mais de etiquetas, basta mudar o destinatário e clicar em "Adicionar" novamente.
                     </div>
                 )}
 
