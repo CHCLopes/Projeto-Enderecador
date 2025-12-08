@@ -1,6 +1,6 @@
 # <a href="https://reactjs.org/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original-wordmark.svg" alt="react" width="40" height="40"/></a><a href="https://tailwindcss.com/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" alt="react" width="40" height="40"/></a><a href="https://www.typescriptlang.org/" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" alt="typescript" width="40" height="40"/></a> Endereçador
 ___
-# 📦 Endereçador de Encomendas e Correspondência
+# 🖊️📨📦 Endereçador de Encomendas e Correspondência
 
 ![Status](https://img.shields.io/badge/Status-Concluído-green)
 ![React](https://img.shields.io/badge/React-18-blue)
@@ -9,7 +9,7 @@ ___
 
 > Aplicação web single page responsiva para busca de CEP, geração e preenchimento automatizado de etiquetas de endereçamento de encomendas.
 
-## 🎯 Preview
+## ▶️ Preview
 
 | Desktop, Tablet e Mobile |
 |---------------------------|
@@ -29,7 +29,7 @@ ___
 
 ## ✨ Sobre o Projeto
 
-O **Endereçador** é uma Single Page Application (SPA) robusta desenvolvida para resolver o problema da geração manual de etiquetas de postagem. <br /> A aplicação automatiza o preenchimento de endereços utilizando a API ViaCEP, gera códigos de barras (Code 128) para rastreio automatizado e suporta envios internacionais com tradução de campos e seleção de países. <br /> O sistema permite criar lotes de etiquetas para múltiplos destinatários mantendo o mesmo remetente. <br /> A aplicação foi feita utilizando como modelo as etiquetas dos Correios do Brasil, focando em agilidade logística e padronização de envios de encomendas nacionais e internacionais. 
+O **Endereçador** é uma Single Page Application (SPA) robusta desenvolvida para resolver o problema da geração manual de etiquetas de postagem. <br /> A aplicação automatiza o preenchimento de endereços utilizando a API ViaCEP, gera códigos de barras (Code 128) para rastreio automatizado e suporta envios internacionais com tradução de campos e seleção de países. <br /> O sistema permite criar lotes de etiquetas para múltiplos destinatários mantendo o mesmo remetente. <br /> A aplicação foi feita utilizando como modelo as etiquetas dos Correios do Brasil, focando em agilidade logística e padronização de envios de encomendas nacionais e internacionais.
 
 ## 🛠️ Stack Tecnológica
 
@@ -47,7 +47,7 @@ O **Endereçador** é uma Single Page Application (SPA) robusta desenvolvida par
 - **Lucide React** - Ícones vetoriais modernos
 - **Clsx** - Construção condicional de classes CSS
 
-### Ferramentas:
+### Ferramentas
 
 - <a href="https://viacep.com.br/" target="_blank" rel="noreferrer"> <img src="https://viacep.com.br/estatico/images/viacep.png.pagespeed.ce.I738q6-Y6M.png" alt="ViaCEP Icon" width="25"/>  ViaCEP - API de consulta de endereços brasileiros</a><br />
 - <a href="netlify.com" target="_blank" rel="noreferrer"> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/netlify/netlify-original.svg" alt="Netlify Icon" width="25" />  Netlify - Hospedagem e CI/CD</a><br />
@@ -57,7 +57,7 @@ O **Endereçador** é uma Single Page Application (SPA) robusta desenvolvida par
 
 ## 🚀 Funcionalidades
 
-### Core Features
+### ⭐ Core Features
 
 - ✅ **Busca Automática de CEP**: Integração com ViaCEP para preenchimento rápido.
 - ✅ **Geração de Código de Barras**: Facilita a triagem automatizada nos Correios.
@@ -66,14 +66,14 @@ O **Endereçador** é uma Single Page Application (SPA) robusta desenvolvida par
 - ✅ **Design Print-Friendly**: Layout otimizado para economia de tinta e leitura por scanners.
 - ✅ **Identificação de Contato**: Suporte visual para telefone Fixo ☎️ ou Celular 📱.
 
-## 🎨 Design System & UX/UI
+### 🎨 Design System & UX/UI
 
 - **Identidade Visual**: Cor primária `#07426B` (Azul Naval) transmitindo confiança e profissionalismo.
 - **Feedback Visual**: Botões interativos com estados de *hover*, *disabled* e *active* (Teal/Red).
 - **Tipografia**: Fontes sem serifa para máxima legibilidade na impressão.
 - **Acessibilidade**: Campos com labels claros, foco visível e ícones de suporte.
 
-## ⚠️ SEO & Performance
+### ⚠️ SEO & Performance
 
 - ✅ Aplicação Client-Side leve e rápida (Vite).
 - ✅ Sem dependência de banco de dados (Dados voláteis para privacidade).
