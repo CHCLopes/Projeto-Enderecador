@@ -26,23 +26,23 @@ const initialAddress: AddressData = {
 const HelpMessage = () => (
   <div className="bg-blue-100 p-4 rounded-lg border border-blue-400-200 text-[#07426B] text-sm text-center mb-6">
       <p>
-        <strong className="text-red-600 font-medium text-2xl"> 
+        <strong className="font-bold text-2xl"> 
           Como usar este endereçador
         </strong><br />
-        Siga os passos abaixo para criar e imprimir suas etiquetas de envio:
+        Siga os passos abaixo para criar e imprimir suas etiquetas de envio.
       </p>
-      <ol className="list-inside text-left mt-3 space-y-2">
-        <li>1. Preencha os dados do remetente e do destinatário.
+      <ol className="list-inside text-left mt-1 space-y-2">
+        <li><strong> 1. Preencha os dados do remetente e do destinatário.</strong>
           <br /> 🔶 Você pode pesquisar os CEPs, mas não é obrigatório, a etiqueta será gerada com os dados preenchidos.
           <br /> 🔶 Números de Telefone podem ser preenchidos livremente, então sempre confira após a digitação.
         </li>
-        <li>2. Clique em "Adicionar à Fila de Impressão".</li>
-        <li>3. Para mais etiquetas basta digitar os novos destinatários se o remetente for o mesmo. 
+        <li><strong> 2. Clique em "Adicionar à Fila de Impressão".</strong></li>
+        <li className="mt-2 text-red-600"><strong> 3. Para mais etiquetas basta digitar os novos destinatários e clicar em "Adicionar", se o remetente for o mesmo, ou redigitar todos os dados e clicar em "Adicionar".</strong>
           <br /> 🔶 Não existe limite na quantidade de etiquetas, elas serão impressas 4 por Página.
         </li>
-        <li>4. Clique em "Imprimir Rótulos" para gerar o PDF ou Imprimir.</li>
+        <li><strong> 4. Clique em "Imprimir Rótulos" para gerar o PDF ou Imprimir.</strong></li>
       </ol>
-      <p className="mt-2 text-red-600 font-medium text-left">Para mais de etiquetas, basta mudar o destinatário e clicar em "Adicionar" novamente.</p>
+      
   </div>
 );
 
