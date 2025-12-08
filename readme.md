@@ -14,6 +14,7 @@ ___
 | Desktop, Tablet e Mobile |
 |---------------------------|
 | ![Home](./src/assets/printcompleto.png) |
+
 ### 💻 Interface Desktop
 
 | Desktop | Remetente e Visualização da Impressão | Destinatário e Footer |
@@ -33,12 +34,14 @@ O **Endereçador** é uma Single Page Application (SPA) robusta desenvolvida par
 ## 🛠️ Stack Tecnológica
 
 ### Frontend
+
 - **React** - Biblioteca principal de UI
 - **TypeScript** - Tipagem estática e segurança de código
 - **Tailwind CSS** - Estilização utilitária e responsividade
 - **Vite** - Build tool de alta performance
 
 ### Bibliotecas
+
 - **React-to-print** - Gerenciamento de impressão e renderização de componentes
 - **React-barcode** - Geração de códigos de barras (Code 128)
 - **Lucide React** - Ícones vetoriais modernos
@@ -55,6 +58,7 @@ O **Endereçador** é uma Single Page Application (SPA) robusta desenvolvida par
 ## 🚀 Funcionalidades
 
 ### Core Features
+
 - ✅ **Busca Automática de CEP**: Integração com ViaCEP para preenchimento rápido.
 - ✅ **Geração de Código de Barras**: Facilita a triagem automatizada nos Correios.
 - ✅ **Modo Internacional**: Suporte a envios para o exterior com base de dados de países e tradução (PT/EN).
@@ -69,7 +73,8 @@ O **Endereçador** é uma Single Page Application (SPA) robusta desenvolvida par
 - **Tipografia**: Fontes sem serifa para máxima legibilidade na impressão.
 - **Acessibilidade**: Campos com labels claros, foco visível e ícones de suporte.
 
-### SEO & Performance
+## ⚠️ SEO & Performance
+
 - ✅ Aplicação Client-Side leve e rápida (Vite).
 - ✅ Sem dependência de banco de dados (Dados voláteis para privacidade).
 - ✅ Estilização atômica (Tailwind) para menor CSS bundle size.
