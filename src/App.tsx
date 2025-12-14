@@ -107,23 +107,31 @@ function App() {
           <header className="max-w-7xl mx-auto mb-6 print:hidden">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                 
-                <div className="flex items-center gap-4 w-full md:w-auto">
-                    <img src="/LogoECT.svg" alt="Logo Correios" width={140} className="h-auto" />
-                    <div className="border-l border-gray-300 pl-4">
-                      <h1 className="text-2xl font-bold text-[#07426B]">Endereçador</h1>
-                      <p className="text-xs text-gray-500">Expedição Completa</p>
+                {/* LADO ESQUERDO: LOGO + TÍTULO + BOTÃO AJUDA */}
+                {/* Alterado para flex-col no mobile para empilhar o botão abaixo do título */}
+                <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
+                    
+                    {/* Container Logo + Título (Mantém linha no mobile) */}
+                    <div className="flex items-center justify-center gap-4">
+                        <img src="/LogoECT.svg" alt="Logo Correios" width={140} className="h-auto" />
+                        <div className="border-l border-gray-300 pl-4 text-left">
+                            <h1 className="text-2xl font-bold text-[#07426B]">Endereçador</h1>
+                            <p className="text-xs text-gray-500">Expedição Completa</p>
+                        </div>
                     </div>
                     
+                    {/* Botão AJUDA */}
+                    {/* Mobile: Sem margem auto, centralizado pelo pai flex-col. Desktop: margem esquerda. */}
                     <button 
                         onClick={() => setIsHelpOpen(true)}
-                        className="ml-auto md:ml-4 flex items-center gap-1 text-[#07426B] hover:text-blue-500 transition-colors bg-white px-3 py-1.5 rounded-full shadow-sm border border-blue-100"
+                        className="md:ml-4 flex items-center gap-1 text-[#07426B] hover:text-blue-500 transition-colors bg-white px-3 py-1.5 rounded-full shadow-sm border border-blue-100"
                     >
                         <CircleHelp size={20} />
                         <span className="font-bold text-sm">AJUDA</span>
                     </button>
                 </div>
                 
-                {/* Botões Desktop */}
+                {/* LADO DIREITO: Botões Desktop (Fila + Imprimir) */}
                 <div className="hidden lg:flex gap-3">
                     <div className="bg-white px-4 py-2 rounded-lg shadow text-sm font-medium text-gray-700 flex items-center gap-2">
                         <Users size={16} />
@@ -149,6 +157,7 @@ function App() {
             
             <div className="lg:col-span-4 space-y-6 print:hidden">
               
+              {/* CONFIGURAÇÕES DE ENVIO */}
               <div className="bg-white p-4 rounded-lg shadow border border-blue-200">
                 <h3 className="font-bold text-[#07426B] mb-3 flex items-center gap-2">Configuração de Envio</h3>
                 
@@ -191,6 +200,7 @@ function App() {
               <div className="relative">
                 <AddressForm title="2. Destinatário" type="destinatario" data={currentRecipient} onChange={handleAddressChange} onAutoFill={handleAutoFill} />
                 
+                {/* ÁREA DE ITENS DA DECLARAÇÃO */}
                 {printSettings.mode === 'encomenda' && (
                     <div className="bg-white p-4 rounded-lg shadow border border-blue-200 mt-4">
                         <h4 className="font-bold text-[#07426B] text-sm mb-3 border-b border-blue-100 pb-1">
@@ -321,7 +331,7 @@ function App() {
                     )}
                 </div>
 
-                {/* BOTÃO IMPRIMIR (Visível APENAS NO MOBILE - MOVIDO PARA CIMA DA VISUALIZAÇÃO) */}
+                {/* BOTÃO IMPRIMIR (Visível APENAS NO MOBILE - Agora ANTES da visualização) */}
                 <div className="lg:hidden mb-4 print:hidden">
                     <button
                         onClick={() => handlePrint && handlePrint()}
@@ -336,8 +346,14 @@ function App() {
                     </button>
                 </div>
 
+                {/* 
+                   ÁREA DE PREVIEW / IMPRESSÃO 
+                   Correção Mobile: Adicionado 'overflow-hidden' e uma div interna com 'scale'
+                   para fazer o componente A4 "caber" na tela do celular sem scroll horizontal infinito.
+                */}
                 <div className="bg-gray-300 p-8 rounded-lg min-h-[500px] flex justify-center items-start overflow-hidden print:bg-white print:p-0 print:block print:overflow-visible print:min-h-0">
                     
+                    {/* Wrapper de Scale para Mobile */}
                     <div className="transform scale-[0.45] sm:scale-[0.6] md:scale-[0.75] lg:scale-100 origin-top lg:origin-center transition-transform">
                         <PrintLayout 
                             ref={componentRef}
