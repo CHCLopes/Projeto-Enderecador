@@ -62,9 +62,20 @@ O **Endereçador** é uma Single Page Application (SPA) robusta desenvolvida par
 - ✅ **Busca Automática de CEP**: Integração com ViaCEP para preenchimento rápido.
 - ✅ **Geração de Código de Barras**: Facilita a triagem automatizada nos Correios.
 - ✅ **Modo Internacional**: Suporte a envios para o exterior com base de dados de países e tradução (PT/EN).
-- ✅ **Impressão em Lote**: Adicione múltiplos destinatários e imprima tudo de uma vez (Grid 2x2 em A4).
+- ✅ **Impressão em Lote**: Adicione múltiplos destinatários e imprima tudo de uma vez.
 - ✅ **Design Print-Friendly**: Layout otimizado para economia de tinta e leitura por scanners.
 - ✅ **Identificação de Contato**: Suporte visual para telefone Fixo ☎️ ou Celular 📱.
+
+### 🆕 Atualizações e Expansão
+
+- ✅ **Modos de Envio (Carta vs. Encomenda)**: Seleção de layout específico. O modo Carta gera uma grade de até 16 etiquetas por página, enquanto o modo Encomenda gera etiquetas detalhadas com declaração.
+- ✅ **Declaração de Conteúdo Automatizada**: Geração da declaração obrigatória dos Correios com cálculo automático de totais, lista de itens e texto legal atualizado (Lei 8.137/90).
+- ✅ **Suporte a Aviso de Recebimento (AR)**: Opção para gerar automaticamente as etiquetas pequenas (Remetente e Destinatário) para colagem no cartão de AR.
+- ✅ **Layouts de Impressão Dinâmicos**:
+    - *Encomenda sem AR*: 2 conjuntos por página (40% Etiqueta / 60% Declaração).
+    - *Encomenda com AR*: 2 conjuntos completos por página, incluindo as etiquetas de AR no topo.
+- ✅ **Paginação Inteligente de Itens**: Caso a lista de itens da declaração exceda o limite do layout, o sistema cria automaticamente páginas de continuação.
+- ✅ **Modal de Ajuda**: Guia interativo integrado à interface para auxiliar novos usuários.
 
 ### 🎨 Design System & UX/UI
 

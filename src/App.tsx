@@ -1,10 +1,11 @@
 import { useState, useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
-import { Printer, Plus, Trash2, Users } from 'lucide-react';
+import { Printer, Plus, Trash2, Users, Package, Mail, CheckSquare, Square, CircleHelp } from 'lucide-react';
 import { AddressForm } from './components/AddressForm';
-import { ShippingLabel } from './components/ShippingLabel';
+import { PrintLayout } from './components/PrintLayout';
 import { Footer } from './components/Footer';
-import type { AddressData, AddressType } from './types';
+import { HelpModal } from './components/HelpModal';
+import type { AddressData, AddressType, PrintSettings, DeclarationItem } from './types';
 import clsx from 'clsx';
 
 const initialAddress: AddressData = {
@@ -19,50 +20,37 @@ const initialAddress: AddressData = {
   telefone: '',
   tipoTelefone: 'celular',
   tipoDestino: 'nacional',
-  pais: ''
+  pais: '',
+  itensDeclaracao: []
 };
-
-// CORREÇÃO: O componente HelpMessage foi movido para fora da função App
-const HelpMessage = () => (
-  <div className="bg-blue-100 p-4 rounded-lg border border-blue-400-200 text-[#07426B] text-sm text-center mb-6">
-      <p>
-        <strong className="font-bold text-2xl"> 
-          Como usar este endereçador
-        </strong><br />
-        Siga os passos abaixo para criar e imprimir suas etiquetas de envio.
-      </p>
-      <ol className="list-inside text-left mt-1 space-y-2">
-        <li><strong> 1. Preencha os dados do remetente e do destinatário.</strong>
-          <br /> 🔶 Você pode pesquisar os CEPs, mas não é obrigatório, a etiqueta será gerada com os dados preenchidos.
-          <br /> 🔶 Números de Telefone podem ser preenchidos livremente, então sempre confira após a digitação.
-        </li>
-        <li><strong> 2. Clique em "Adicionar à Fila de Impressão".</strong></li>
-        <li className="mt-2 text-red-600"><strong> 3. Para mais etiquetas basta digitar os novos destinatários e clicar em "Adicionar", se o remetente for o mesmo, ou redigitar todos os dados e clicar em "Adicionar".</strong>
-          <br /> 🔶 Não existe limite na quantidade de etiquetas, elas serão impressas 4 por Página.
-        </li>
-        <li><strong> 4. Clique em "Imprimir Rótulos" para gerar o PDF ou Imprimir.</strong></li>
-      </ol>
-      
-  </div>
-);
 
 function App() {
   const [sender, setSender] = useState<AddressData>(initialAddress);
   const [currentRecipient, setCurrentRecipient] = useState<AddressData>(initialAddress);
   const [recipientsList, setRecipientsList] = useState<AddressData[]>([]);
-  
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
+
+  const [printSettings, setPrintSettings] = useState<PrintSettings>({
+    mode: 'encomenda',
+    hasAR: false
+  });
+
+  const [newItem, setNewItem] = useState<DeclarationItem>({ descricao: '', quantidade: 1, valor: 0 });
+
   const componentRef = useRef<HTMLDivElement>(null);
 
   const handlePrint = useReactToPrint({
     contentRef: componentRef,
-    documentTitle: `Etiquetas-Correios-${new Date().toISOString().split('T')[0]}`,
+    documentTitle: `Etiquetas-${printSettings.mode}-${new Date().toISOString().split('T')[0]}`,
   });
 
   const handleAddressChange = (type: AddressType, field: keyof AddressData, value: string) => {
     if (type === 'remetente') {
-      setSender(prev => ({ ...prev, [field]: value }));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setSender(prev => ({ ...prev, [field]: value as any }));
     } else {
-      setCurrentRecipient(prev => ({ ...prev, [field]: value }));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      setCurrentRecipient(prev => ({ ...prev, [field]: value as any }));
     }
   };
 
@@ -74,13 +62,29 @@ function App() {
     }
   };
 
+  const addItemToRecipient = () => {
+    if(!newItem.descricao) return;
+    setCurrentRecipient(prev => ({
+        ...prev,
+        itensDeclaracao: [...prev.itensDeclaracao, newItem]
+    }));
+    setNewItem({ descricao: '', quantidade: 1, valor: 0 });
+  };
+
+  const removeItemFromRecipient = (idx: number) => {
+    setCurrentRecipient(prev => ({
+        ...prev,
+        itensDeclaracao: prev.itensDeclaracao.filter((_, i) => i !== idx)
+    }));
+  };
+
   const addRecipientToList = () => {
     if (!currentRecipient.nome || !currentRecipient.cep) {
       alert("Preencha pelo menos Nome e CEP do destinatário.");
       return;
     }
     setRecipientsList([...recipientsList, currentRecipient]);
-    setCurrentRecipient(initialAddress);
+    setCurrentRecipient({ ...initialAddress, itensDeclaracao: [] });
   };
 
   const removeRecipient = (index: number) => {
@@ -100,112 +104,211 @@ function App() {
     <div className="min-h-screen bg-gray-100 font-sans flex flex-col">
       <div className="flex-1 p-4 md:p-6">
           
-          {/* HEADER */}
-          <header className="max-w-7xl mx-auto mb-6 flex flex-col md:flex-row items-center justify-between gap-4 print:hidden">
-            <div className="flex items-center gap-4">
-                {/* LOGO ALTERADO: public/LogoECT.svg com width 140 */}
-                <img 
-                    src="/LogoECT.svg" 
-                    alt="Logo Correios" 
-                    width={140}
-                    className="h-auto"
-                />
+          <header className="max-w-7xl mx-auto mb-6 print:hidden">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                 
-                <div className="border-l border-gray-300 pl-4">
-                  <h1 className="text-2xl font-bold text-[#07426B]">Endereçador</h1>
-                  <p className="text-xs text-gray-500">Padrão 1/4 Página (A6) com Código de Barras</p>
-                </div>
-            </div>
-            
-            {/* BOTÕES DE AÇÃO (Visíveis APENAS NO DESKTOP) */}
-            <div className="hidden lg:flex gap-3">
-                <div className="bg-white px-4 py-2 rounded-lg shadow text-sm font-medium text-gray-700 flex items-center gap-2">
-                    <Users size={16} />
-                    {recipientsList.length} na fila
+                <div className="flex items-center gap-4 w-full md:w-auto">
+                    <img src="/LogoECT.svg" alt="Logo Correios" width={140} className="h-auto" />
+                    <div className="border-l border-gray-300 pl-4">
+                      <h1 className="text-2xl font-bold text-[#07426B]">Endereçador</h1>
+                      <p className="text-xs text-gray-500">Expedição Completa</p>
+                    </div>
+                    
+                    <button 
+                        onClick={() => setIsHelpOpen(true)}
+                        className="ml-auto md:ml-4 flex items-center gap-1 text-[#07426B] hover:text-blue-500 transition-colors bg-white px-3 py-1.5 rounded-full shadow-sm border border-blue-100"
+                    >
+                        <CircleHelp size={20} />
+                        <span className="font-bold text-sm">AJUDA</span>
+                    </button>
                 </div>
                 
-                <button
-                    onClick={() => handlePrint && handlePrint()}
-                    disabled={!hasLabels}
-                    className={clsx(
-                        "flex items-center gap-2 px-6 py-2 rounded-lg font-medium transition-colors shadow-lg text-white",
-                        !hasLabels ? "bg-red-500 cursor-not-allowed opacity-80" : "bg-teal-600 hover:bg-teal-700"
-                    )}
-                >
-                    <Printer size={20} />
-                    {getPrintButtonText()}
-                </button>
+                {/* Botões Desktop */}
+                <div className="hidden lg:flex gap-3">
+                    <div className="bg-white px-4 py-2 rounded-lg shadow text-sm font-medium text-gray-700 flex items-center gap-2">
+                        <Users size={16} />
+                        {recipientsList.length} na fila
+                    </div>
+                    
+                    <button
+                        onClick={() => handlePrint && handlePrint()}
+                        disabled={!hasLabels}
+                        className={clsx(
+                            "flex items-center gap-2 px-6 py-2 rounded-lg font-medium transition-colors shadow-lg text-white",
+                            !hasLabels ? "bg-red-500 cursor-not-allowed opacity-80" : "bg-teal-600 hover:bg-teal-700"
+                        )}
+                    >
+                        <Printer size={20} />
+                        {getPrintButtonText()}
+                    </button>
+                </div>
             </div>
           </header>
 
           <main className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6">
             
-            {/* TEXTO DE AJUDA (Visível APENAS NO MOBILE - Topo) */}
-            {!hasLabels && (
-                <div className="lg:hidden col-span-1 print:hidden">
-                    <HelpMessage />
-                </div>
-            )}
-
-            {/* COLUNA ESQUERDA: FORMULÁRIOS */}
             <div className="lg:col-span-4 space-y-6 print:hidden">
+              
+              <div className="bg-white p-4 rounded-lg shadow border border-blue-200">
+                <h3 className="font-bold text-[#07426B] mb-3 flex items-center gap-2">Configuração de Envio</h3>
+                
+                <div className="flex flex-col gap-3">
+                    <div className="flex gap-2">
+                        <button 
+                            onClick={() => setPrintSettings(p => ({ ...p, mode: 'encomenda' }))}
+                            className={clsx("flex-1 py-2 px-3 rounded border flex items-center justify-center gap-2 text-sm font-medium transition-colors", 
+                                printSettings.mode === 'encomenda' 
+                                    ? "bg-[#07426B] border-[#07426B] text-white" 
+                                    : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-blue-50")}
+                        >
+                            <Package size={18} /> Encomenda
+                        </button>
+                        <button 
+                            onClick={() => setPrintSettings(p => ({ ...p, mode: 'carta' }))}
+                            className={clsx("flex-1 py-2 px-3 rounded border flex items-center justify-center gap-2 text-sm font-medium transition-colors", 
+                                printSettings.mode === 'carta' 
+                                    ? "bg-[#07426B] border-[#07426B] text-white" 
+                                    : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-blue-50")}
+                        >
+                            <Mail size={18} /> Carta
+                        </button>
+                    </div>
+
+                    <button 
+                        onClick={() => setPrintSettings(p => ({ ...p, hasAR: !p.hasAR }))}
+                        className="flex items-center gap-2 text-sm font-medium text-gray-700 cursor-pointer hover:bg-blue-50 p-2 rounded transition-colors"
+                    >
+                        {printSettings.hasAR ? <CheckSquare className="text-[#07426B]" /> : <Square className="text-gray-400" />}
+                        Incluir Aviso de Recebimento (AR)
+                    </button>
+                </div>
+              </div>
+
               <div className="bg-blue-50 border border-blue-100 rounded-lg">
-                <AddressForm 
-                    title="1. Dados do Remetente (Fixo)" 
-                    type="remetente"
-                    data={sender}
-                    onChange={handleAddressChange}
-                    onAutoFill={handleAutoFill}
-                />
+                <AddressForm title="1. Remetente" type="remetente" data={sender} onChange={handleAddressChange} onAutoFill={handleAutoFill} />
               </div>
 
               <div className="relative">
-                <AddressForm 
-                    title="2. Novo Destinatário" 
-                    type="destinatario"
-                    data={currentRecipient}
-                    onChange={handleAddressChange}
-                    onAutoFill={handleAutoFill}
-                />
+                <AddressForm title="2. Destinatário" type="destinatario" data={currentRecipient} onChange={handleAddressChange} onAutoFill={handleAutoFill} />
+                
+                {printSettings.mode === 'encomenda' && (
+                    <div className="bg-white p-4 rounded-lg shadow border border-blue-200 mt-4">
+                        <h4 className="font-bold text-[#07426B] text-sm mb-3 border-b border-blue-100 pb-1">
+                            Itens da Declaração de Conteúdo
+                        </h4>
+                        
+                        <div className="flex gap-2 mb-2 items-end">
+                            <div className="flex-1">
+                                <label className="block text-xs font-bold text-[#07426B] mb-1 pl-1">Descrição do Item</label>
+                                <input 
+                                    placeholder="Ex: Camiseta" 
+                                    value={newItem.descricao}
+                                    onChange={e => setNewItem({ ...newItem, descricao: e.target.value })}
+                                    className="w-full p-2 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-[#07426B] outline-none"
+                                />
+                            </div>
+                            
+                            <div className="w-16">
+                                <label className="block text-xs font-bold text-[#07426B] mb-1 text-center">Qtd.</label>
+                                <input 
+                                    type="number" 
+                                    placeholder="1" 
+                                    value={newItem.quantidade}
+                                    onChange={e => setNewItem({ ...newItem, quantidade: parseInt(e.target.value) || 0 })}
+                                    className="w-full p-2 text-sm border border-gray-300 rounded text-center focus:ring-1 focus:ring-[#07426B] outline-none"
+                                />
+                            </div>
+
+                            <div className="w-24">
+                                <label className="block text-xs font-bold text-[#07426B] mb-1 text-right pr-1">Valor (R$)</label>
+                                <input 
+                                    type="number" 
+                                    placeholder="0,00" 
+                                    value={newItem.valor}
+                                    onChange={e => setNewItem({ ...newItem, valor: parseFloat(e.target.value) || 0 })}
+                                    className="w-full p-2 text-sm border border-gray-300 rounded text-right focus:ring-1 focus:ring-[#07426B] outline-none"
+                                />
+                            </div>
+
+                            <button 
+                                onClick={addItemToRecipient} 
+                                className="bg-[#07426B] text-white p-2.5 rounded hover:bg-[#095285] transition-colors mb-[1px]"
+                                title="Adicionar Item"
+                                aria-label="Adicionar Item"
+                            >
+                                <Plus size={16} />
+                            </button>
+                        </div>
+
+                        {currentRecipient.itensDeclaracao.length > 0 && (
+                            <ul className="bg-gray-50 rounded border border-gray-200 text-xs divide-y divide-gray-200">
+                                {currentRecipient.itensDeclaracao.map((item, idx) => (
+                                    <li key={idx} className="p-2 flex justify-between items-center hover:bg-gray-100 transition-colors">
+                                        <span className="text-gray-700">
+                                            <strong>{item.quantidade}x</strong> {item.descricao} (R$ {item.valor})
+                                        </span>
+                                        <button 
+                                            onClick={() => removeItemFromRecipient(idx)} 
+                                            className="text-red-400 hover:text-red-600 hover:bg-red-50 p-1 rounded"
+                                            title="Remover Item"
+                                            aria-label="Remover Item"
+                                        >
+                                            <Trash2 size={14} />
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                    </div>
+                )}
+
                 <button 
                     onClick={addRecipientToList}
-                    className="w-full mt-2 bg-teal-600 hover:bg-teal-700 text-white py-3 rounded-lg font-bold shadow flex items-center justify-center gap-2 transition-transform active:scale-95"
+                    className="w-full mt-4 bg-teal-600 hover:bg-teal-700 text-white py-3 rounded-lg font-bold shadow flex items-center justify-center gap-2 transition-transform active:scale-[0.99]"
                 >
                     <Plus size={20} />
                     Adicionar à Fila de Impressão
                 </button>
                 
-                {/* CONTADOR DE FILA (Visível APENAS NO MOBILE - Após o botão adicionar) */}
                 <div className="lg:hidden mt-3 flex justify-center">
                     <div className="bg-white px-4 py-2 rounded-full shadow border border-gray-200 text-sm font-medium text-gray-700 flex items-center gap-2">
                         <Users size={16} />
-                        {recipientsList.length} na fila de impressão
+                        {recipientsList.length} na fila
                     </div>
                 </div>
               </div>
             </div>
 
-            {/* COLUNA DIREITA: PREVIEW E LISTA */}
             <div className="lg:col-span-8">
                 
-                {/* LISTA DE ITENS NA FILA (Desktop e Mobile) */}
                 <div className="print:hidden">
                     {hasLabels ? (
                         <div className="bg-white p-4 rounded-lg shadow-sm mb-6 border border-gray-200">
-                            <h3 className="font-bold text-gray-700 mb-3 flex items-center gap-2">
-                                <Users size={18} /> Fila de Impressão
-                            </h3>
+                             <div className="flex justify-between items-center mb-3">
+                                <h3 className="font-bold text-gray-700 flex items-center gap-2">
+                                    <Users size={18} /> Fila: {printSettings.mode.toUpperCase()} {printSettings.hasAR ? '+ AR' : ''}
+                                </h3>
+                                <button 
+                                    onClick={() => setRecipientsList([])} 
+                                    className="text-xs text-red-500 hover:underline"
+                                    title="Limpar toda a fila"
+                                >
+                                    Limpar tudo
+                                </button>
+                            </div>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-60 overflow-y-auto pr-2">
                                 {recipientsList.map((rec, idx) => (
                                     <div key={idx} className="flex justify-between items-center p-3 bg-gray-50 rounded border border-gray-200 text-sm">
                                         <div>
                                             <p className="font-bold">{rec.nome}</p>
                                             <p className="text-gray-500">{rec.localidade}/{rec.uf}</p>
+                                            {rec.itensDeclaracao.length > 0 && <span className="text-xs text-[#07426B] font-medium">{rec.itensDeclaracao.length} itens declarados</span>}
                                         </div>
                                         <button 
-                                            onClick={() => removeRecipient(idx)}
+                                            onClick={() => removeRecipient(idx)} 
                                             className="text-red-500 hover:bg-red-50 p-2 rounded"
-                                            title="Remover"
+                                            title="Remover Destinatário"
+                                            aria-label="Remover Destinatário"
                                         >
                                             <Trash2 size={16} />
                                         </button>
@@ -214,36 +317,12 @@ function App() {
                             </div>
                         </div>
                     ) : (
-                        /* TEXTO DE AJUDA (Visível APENAS NO DESKTOP - Coluna Direita) */
-                        <div className="hidden lg:block">
-                             <HelpMessage />
-                        </div>
+                        null
                     )}
                 </div>
 
-                {/* ÁREA DE PREVIEW / IMPRESSÃO */}
-                <div className="bg-gray-300 p-8 rounded-lg overflow-x-auto min-h-[500px] flex justify-center items-start print:bg-white print:p-0 print:block print:overflow-visible print:min-h-0">
-                    <div 
-                        ref={componentRef} 
-                        className="w-fit bg-white p-0 print:w-full grid grid-cols-1 md:grid-cols-2 print:grid-cols-2 gap-0"
-                    >
-                        {/* Preview Fantasma */}
-                        {!hasLabels && (
-                            <div className="opacity-50 pointer-events-none grayscale md:col-span-2 flex justify-center p-4">
-                                <ShippingLabel sender={sender} recipient={currentRecipient} />
-                            </div>
-                        )}
-
-                        {recipientsList.map((recipient, index) => (
-                            <div key={index} className="flex justify-center p-2 border border-gray-100 border-dashed print:border-none print:p-0">
-                                <ShippingLabel sender={sender} recipient={recipient} />
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* BOTÃO IMPRIMIR (Visível APENAS NO MOBILE - Fim da Tela) */}
-                <div className="lg:hidden mt-8 mb-4 print:hidden">
+                {/* BOTÃO IMPRIMIR (Visível APENAS NO MOBILE - MOVIDO PARA CIMA DA VISUALIZAÇÃO) */}
+                <div className="lg:hidden mb-4 print:hidden">
                     <button
                         onClick={() => handlePrint && handlePrint()}
                         disabled={!hasLabels}
@@ -257,10 +336,24 @@ function App() {
                     </button>
                 </div>
 
+                <div className="bg-gray-300 p-8 rounded-lg min-h-[500px] flex justify-center items-start overflow-hidden print:bg-white print:p-0 print:block print:overflow-visible print:min-h-0">
+                    
+                    <div className="transform scale-[0.45] sm:scale-[0.6] md:scale-[0.75] lg:scale-100 origin-top lg:origin-center transition-transform">
+                        <PrintLayout 
+                            ref={componentRef}
+                            sender={sender}
+                            recipients={recipientsList.length > 0 ? recipientsList : [currentRecipient]}
+                            settings={printSettings}
+                        />
+                    </div>
+                </div>
+
             </div>
           </main>
       </div>
       
+      <HelpModal isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />
+
       <Footer />
     </div>
   );
