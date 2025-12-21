@@ -15,12 +15,12 @@ interface LabelItem {
   type: "REMETENTE" | "DESTINATÁRIO";
 }
 
-// CORREÇÃO: Aumentado limite de itens para 7
+// Limite de itens na declaração
 const ITEMS_PER_PAGE_LIMIT = 7;
 
 export const PrintLayout = React.forwardRef<HTMLDivElement, Props>(({ sender, recipients, settings }, ref) => {
   
-  // 1. Lógica de Paginação de Itens (Split de Declaração)
+  // 1. Lógica de Paginação de Itens
   const recipientsToPrint = useMemo(() => {
     if (settings.mode === 'carta') return recipients;
 
@@ -94,7 +94,7 @@ export const PrintLayout = React.forwardRef<HTMLDivElement, Props>(({ sender, re
             {pages.map((pageGroup, pageIndex) => (
                 <div key={pageIndex} className="w-[210mm] h-[297mm] bg-white flex flex-col p-0 box-border break-after-page mx-auto shadow-md print:shadow-none mb-4 print:mb-0">
                     {pageGroup.map((recipient, idx) => (
-                        // Container de 1 Conjunto (Altura ~148.5mm = Metade da folha)
+                        // Container de 1 Conjunto (Altura ~148.5mm)
                         <div key={idx} className="flex h-[148.5mm] relative">
                             
                             {/* LINHA DE CORTE ABSOLUTA (Apenas para o primeiro item) */}
@@ -105,23 +105,23 @@ export const PrintLayout = React.forwardRef<HTMLDivElement, Props>(({ sender, re
                             {/* COLUNA ESQUERDA (40%): Etiquetas de Endereço */}
                             <div className="w-[40%] flex flex-col border-r border-dashed border-gray-300">
                                 
-                                {/* Linha 1: AR Remetente (Altura fixa pequena ~35mm) */}
-                                <div className="h-[35mm] border-b border-dashed border-gray-300 flex items-center justify-center p-0.5">
+                                {/* Linha 1: AR Remetente (REDUZIDO PARA 25mm) */}
+                                <div className="h-[25mm] border-b border-dashed border-gray-300 flex items-center justify-center p-0.5">
                                     <SmallLabel data={sender} label="REMETENTE" isAR={true} className="h-full w-full border-none" />
                                 </div>
 
-                                {/* Linha 2: AR Destinatário (Altura fixa pequena ~35mm) */}
-                                <div className="h-[35mm] border-b border-dashed border-gray-300 flex items-center justify-center p-0.5">
+                                {/* Linha 2: AR Destinatário (REDUZIDO PARA 25mm) */}
+                                <div className="h-[25mm] border-b border-dashed border-gray-300 flex items-center justify-center p-0.5">
                                     <SmallLabel data={recipient} label="DESTINATÁRIO" isAR={true} className="h-full w-full border-none" />
                                 </div>
 
-                                {/* Linha 3: Etiqueta Principal (Ocupa o resto da altura ~78mm) */}
+                                {/* Linha 3: Etiqueta Principal (Ocupa o resto ~98mm) */}
                                 <div className="flex-1 flex items-start justify-center p-0">
                                     <ShippingLabel sender={sender} recipient={recipient} />
                                 </div>
                             </div>
 
-                            {/* COLUNA DIREITA (60%): Declaração de Conteúdo (Altura total) */}
+                            {/* COLUNA DIREITA (60%): Declaração de Conteúdo */}
                             <div className="w-[60%] flex items-start justify-center p-0">
                                 <DeclarationLabel sender={sender} recipient={recipient} />
                             </div>
@@ -140,20 +140,16 @@ export const PrintLayout = React.forwardRef<HTMLDivElement, Props>(({ sender, re
         {pages.map((pageGroup, pageIndex) => (
             <div key={pageIndex} className="w-[210mm] h-[297mm] bg-white flex flex-col break-after-page mx-auto shadow-md print:shadow-none mb-4 print:mb-0">
                 {pageGroup.map((recipient, idx) => (
-                    // Container com Linha de Corte
                     <div key={idx} className="flex h-[148mm] w-full border-b border-dashed border-gray-300 relative">
                         
-                        {/* LINHA DE CORTE ABSOLUTA (Apenas para o primeiro item) */}
                         {idx === 0 && (
                             <div className="absolute bottom-0 left-0 w-full border-b-2 border-dashed border-black z-10 print:border-black"></div>
                         )}
 
-                        {/* COLUNA ESQUERDA (40%): Etiqueta */}
                         <div className="w-[40%] flex items-center justify-center p-2 border-r border-dashed border-gray-300">
                              <ShippingLabel sender={sender} recipient={recipient} />
                         </div>
                         
-                        {/* COLUNA DIREITA (60%): Declaração */}
                         <div className="w-[60%] flex items-center justify-center p-2">
                              <DeclarationLabel sender={sender} recipient={recipient} />
                         </div>
