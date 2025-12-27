@@ -41,7 +41,7 @@ export const PrintLayout = React.forwardRef<HTMLDivElement, Props>(({ sender, re
 
 
   // ========================================================================
-  // MODO CARTA (GRID FLEXÍVEL)
+  // MODO CARTA (GRID FLEXÍVEL E COMPACTO)
   // ========================================================================
   if (settings.mode === 'carta') {
     const itemsToPrint: LabelItem[] = [];
@@ -67,13 +67,13 @@ export const PrintLayout = React.forwardRef<HTMLDivElement, Props>(({ sender, re
         {pages.map((pageItems, pageIndex) => (
           <div 
             key={pageIndex} 
-            // Alterado: min-h-[297mm] h-auto (permite crescer) e removido grid-rows-8
-            className="w-[210mm] min-h-[297mm] h-auto bg-white grid grid-cols-2 gap-x-1 gap-y-0 p-[5mm] box-border break-after-page mx-auto shadow-md print:shadow-none mb-4 print:mb-0"
+            // ALTERADO: Adicionado 'content-start' e 'gap-y-1'
+            // content-start: Faz as linhas ficarem juntas no topo, sem esticar para preencher a página
+            className="w-[210mm] min-h-[297mm] h-auto bg-white grid grid-cols-2 gap-x-1 gap-y-1 content-start p-[5mm] box-border break-after-page mx-auto shadow-md print:shadow-none mb-4 print:mb-0"
           >
             {pageItems.map((item, idx) => (
               <div 
                 key={idx} 
-                // Adicionado: break-inside-avoid para não cortar etiqueta ao meio
                 className="flex items-center justify-center border border-dashed border-gray-100 print:border-none break-inside-avoid"
               >
                 <SmallLabel data={item.data} label={item.type} compact={true} />
@@ -103,7 +103,6 @@ export const PrintLayout = React.forwardRef<HTMLDivElement, Props>(({ sender, re
             {pages.map((pageGroup, pageIndex) => (
                 <div key={pageIndex} className="w-[210mm] h-[297mm] bg-white flex flex-col p-0 box-border break-after-page mx-auto shadow-md print:shadow-none mb-4 print:mb-0">
                     {pageGroup.map((recipient, idx) => (
-                        // Container de 1 Conjunto (Altura ~148.5mm = Metade da folha)
                         <div key={idx} className="flex h-[148.5mm] relative">
                             
                             {/* LINHA DE CORTE ABSOLUTA (Apenas para o primeiro item) */}
@@ -149,20 +148,16 @@ export const PrintLayout = React.forwardRef<HTMLDivElement, Props>(({ sender, re
         {pages.map((pageGroup, pageIndex) => (
             <div key={pageIndex} className="w-[210mm] h-[297mm] bg-white flex flex-col break-after-page mx-auto shadow-md print:shadow-none mb-4 print:mb-0">
                 {pageGroup.map((recipient, idx) => (
-                    // Adicionado 'relative' e a linha absoluta aqui também para consistência
                     <div key={idx} className="flex h-[148mm] w-full border-b border-dashed border-gray-300 relative">
                         
-                        {/* LINHA DE CORTE ABSOLUTA (Apenas para o primeiro item) */}
                         {idx === 0 && (
                             <div className="absolute bottom-0 left-0 w-full border-b-2 border-dashed border-black z-10 print:border-black"></div>
                         )}
 
-                        {/* COLUNA ESQUERDA (40%): Etiqueta */}
                         <div className="w-[40%] flex items-center justify-center p-2 border-r border-dashed border-gray-300">
                              <ShippingLabel sender={sender} recipient={recipient} />
                         </div>
                         
-                        {/* COLUNA DIREITA (60%): Declaração */}
                         <div className="w-[60%] flex items-center justify-center p-2">
                              <DeclarationLabel sender={sender} recipient={recipient} />
                         </div>
