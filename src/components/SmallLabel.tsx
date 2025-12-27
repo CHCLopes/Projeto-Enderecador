@@ -12,30 +12,40 @@ interface Props {
 export const SmallLabel: React.FC<Props> = ({ data, label, compact = false, isAR = false, className = "" }) => {
   
   // Definição de estilos baseados no modo
-  let containerClass = "border border-gray-300 print:border-black bg-white flex flex-col justify-center font-sans relative box-border overflow-hidden";
+  let containerClass = "border border-gray-300 print:border-black bg-white flex flex-col justify-center font-sans relative box-border";
   let titleClass = "font-bold uppercase mb-0.5 shrink-0";
-  let nameClass = "font-bold uppercase leading-none line-clamp-1 mb-0.5"; // leading-none para AR
+  let nameClass = "font-bold uppercase leading-tight mb-0.5"; 
   let textClass = "leading-tight";
+  let phoneClass = "font-bold uppercase mb-0.5"; 
 
   if (compact) {
-    // Modo Carta
-    containerClass += " w-[102mm] h-[36mm] p-2 text-[10px] border-gray-200 print:border-none";
-    titleClass += " text-[9px] text-gray-500";
-    nameClass += " text-sm";
-    textClass += " text-[11px]";
+    // MODO CARTA (Expansível)
+    // Alterações: 
+    // 1. min-h-[36mm] h-auto: Garante tamanho mínimo mas cresce se precisar.
+    // 2. w-full: Ocupa a largura da célula do grid.
+    // 3. Removido overflow-hidden.
+    containerClass += " w-full min-h-[36mm] h-auto p-2 border-gray-200 print:border-none items-center text-center";
+    titleClass += " text-[10px] text-gray-500";
+    
+    nameClass += " text-sm"; 
+    phoneClass += " text-[10px] text-gray-800";
+    textClass += " text-sm w-full"; 
+
   } else if (isAR) {
-    // Modo AR (Super Compacto)
+    // MODO AR (Compacto Fixo)
     const defaultDimensions = className.includes('h-') ? "" : "h-[55mm]";
-    // Alterado: p-0.5 para padding mínimo
-    containerClass += ` w-[105mm] ${defaultDimensions} p-0.5 text-[9px] items-center text-center leading-none`; 
-    titleClass += " text-[9px] mb-0"; // Título menor e sem margem
-    nameClass += " text-[11px]"; // Nome um pouco menor
-    textClass += " text-[9px] w-full leading-none"; // Texto bem compacto
+    // AR mantém overflow-hidden e tamanho fixo pois o espaço físico do formulário é rígido
+    containerClass += ` w-[105mm] ${defaultDimensions} p-0.5 text-[9px] items-center text-center leading-none overflow-hidden`; 
+    titleClass += " text-[9px] mb-0";
+    nameClass += " text-[11px] line-clamp-1";
+    phoneClass += " text-[9px]";
+    textClass += " text-[9px] w-full leading-none"; 
+    
   } else {
-    // Modo Padrão
-    containerClass += " w-[105mm] h-[74mm] p-3 text-xs";
+    // MODO PADRÃO
+    containerClass += " w-[105mm] h-[74mm] p-3 text-xs overflow-hidden";
     titleClass += " text-sm";
-    nameClass += " text-base";
+    nameClass += " text-base line-clamp-1";
     textClass += " text-sm";
   }
 
@@ -46,22 +56,28 @@ export const SmallLabel: React.FC<Props> = ({ data, label, compact = false, isAR
       <div className="w-full">
         <p className={nameClass}>{data.nome}</p>
         
+        {data.telefone && (
+            <p className={phoneClass}>FONE: {data.telefone}</p>
+        )}
+        
         <div className={textClass}>
-           <p className="truncate">
+           {/* Removido classes de limitação de linha no modo carta implicitamente */}
+           <p className="break-words">
              {data.logradouro}, {data.numero} {data.complemento}
            </p>
-           <p className="truncate">
+           <p className="break-words">
              {data.bairro} - {data.localidade}/{data.uf}
            </p>
            
-           <div className={`flex items-end mt-0.5 ${isAR ? 'justify-center' : 'justify-between'}`}>
+           <div className={`flex items-end mt-0.5 ${compact || isAR ? 'justify-center' : 'justify-between'}`}>
               <p className="font-bold text-sm">{data.cep}</p>
-              {data.pais && data.pais !== 'BR' && !isAR && (
+              {data.pais && data.pais !== 'BR' && !isAR && !compact && (
                   <p className="font-bold uppercase text-[10px]">{data.pais}</p>
               )}
            </div>
-           {data.pais && data.pais !== 'BR' && isAR && (
-               <p className="font-bold uppercase text-[8px]">{data.pais}</p>
+           
+           {(compact || isAR) && data.pais && data.pais !== 'BR' && (
+               <p className="font-bold uppercase text-[8px] mt-0.5">{data.pais}</p>
            )}
         </div>
       </div>
